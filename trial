@@ -3,7 +3,8 @@ using namespace std;
 
 int main(){
 string author;
-    char option; 
+int ISBN;   
+char option; 
     
     
     cout << "MENU" << endl;
@@ -20,6 +21,9 @@ string author;
         
         cout << "Enter book author: ";
         getline(cin,author);
+
+        cout << "Enter ISBN: ";
+        (cin, ISBN);
         
         
         }
