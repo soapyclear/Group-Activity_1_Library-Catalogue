@@ -29,6 +29,7 @@ char option;
         cin >> ISBN;
 
         cout << "Enter Category: ";
+        cin.ignore();
         getline(cin,category);
         
         cout << "Year Published: ";
