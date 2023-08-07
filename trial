@@ -2,6 +2,29 @@
 using namespace std;
 
 int main(){
+string author;
+    char option; 
+    
+    
+    cout << "MENU" << endl;
+    cout << "1. Add Book Information" << endl;
+    cout << "2. Delete Book Information" << endl;
+    cout << "3. Edit Book Information" << endl;
+    cout << "4. View Book List" << endl;
+    cout << "Option: ";
+    cin >> option;
+    
+    switch (option) {
+        case '1': {
+        
+        
+        cout << "Enter book author: ";
+        getline(cin,author);
+        
+        
+        }
+        
+    }
 
   return 0;
 }
