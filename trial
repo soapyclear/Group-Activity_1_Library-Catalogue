@@ -5,6 +5,7 @@ int main(){
 string author;
 string category;
 int ISBN;   
+int year;
 char option; 
     
     
@@ -29,6 +30,8 @@ char option;
         cout << "Enter Category: ";
         getline(cin,category);
         
+        cout << "Year Published: ";
+        cin >> year;
         
         }
         
