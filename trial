@@ -22,6 +22,7 @@ char option;
         
         
         cout << "Enter book author: ";
+        cin.ignore();
         getline(cin,author);
 
         cout << "Enter ISBN: ";
