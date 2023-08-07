@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
 class Book {
@@ -39,7 +40,7 @@ public:
         });
     }
 
-void viewAllBooks() const {
+    void viewAllBooks() const {
         cout << "\tID\t\tName\t\tAuthor\t\tISBN\t\tCategory\t\tYear Published" << endl;
         int id = 1;
         for (const Book& book : books) {
@@ -53,20 +54,67 @@ void viewAllBooks() const {
         }
     }
 
+    void editBook(const string& book_id, const string& new_book_name,
+                  const string& new_author, const string& new_isbn,
+                  const string& new_category, int new_year_published) {
+        for (Book& book : books) {
+            if (book.book_id == book_id) {
+                book.book_name = new_book_name;
+                book.author = new_author;
+                book.isbn = new_isbn;
+                book.category = new_category;
+                book.year_published = new_year_published;
+                break;
+            }
+        }
+        sort(books.begin(), books.end(), [](const Book& a, const Book& b) {
+            return a.book_name < b.book_name || (a.book_name == b.book_name && a.year_published < b.year_published);
+        });
+    }
 
-int main(){
-    
-    
-    cout << "MENU" << endl;
-    cout << "1. Add Book Information" << endl;
-    cout << "2. Delete Book Information" << endl;
-    cout << "3. Edit Book Information" << endl;
-    cout << "4. View Book List" << endl;
-    cout << "Option: ";
-    cin >> option;
-    
-    switch (option) {
-        case '1': {
+    void deleteBook(const string& book_id) {
+        books.erase(remove_if(books.begin(), books.end(),
+                              [&book_id](const Book& book) { return book.book_id == book_id; }),
+                    books.end());
+    }
+
+    vector<Book> searchBooks(const string& search_query) const {
+        vector<Book> search_results;
+        for (const Book& book : books) {
+            if (tolowerString(book.book_name).find(tolowerString(search_query)) != string::npos ||
+                tolowerString(book.author).find(tolowerString(search_query)) != string::npos) {
+                search_results.push_back(book);
+            }
+        }
+        return search_results;
+    }
+
+private:
+    string tolowerString(const string& str) const {
+        string lower_str = str;
+        transform(lower_str.begin(), lower_str.end(), lower_str.begin(), ::tolower);
+        return lower_str;
+    }
+};
+
+int main() {
+    LibraryCatalog library;
+
+    while (true) {
+        cout << "Library Catalog Information Program" << endl;
+        cout << "1. Add Book" << endl;
+        cout << "2. View All Books" << endl;
+        cout << "3. Edit Book" << endl;
+        cout << "4. Delete Book" << endl;
+        cout << "5. Search Books" << endl;
+        cout << "6. Exit" << endl;
+
+        char choice;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case '1': {
                 string book_id, book_name, author, isbn, category;
                 int year_published;
 
@@ -90,10 +138,63 @@ int main(){
                 cout << "Book added successfully." << endl;
                 break;
             }
-        case '2':
+            case '2':
                 library.viewAllBooks();
                 break;
+            case '3': {
+                string book_id, new_book_name, new_author, new_isbn, new_category;
+                int new_year_published;
+                cout << "Enter Book ID to edit: ";
+                cin >> book_id;
+                cin.ignore();
+                cout << "Enter New Book Name: ";
+                getline(cin, new_book_name);
+                cout << "Enter New Author: ";
+                getline(cin, new_author);
+                cout << "Enter New ISBN: ";
+                cin >> new_isbn;
+                cin.ignore();
+                cout << "Enter New Category: ";
+                getline(cin, new_category);
+                cout << "Enter New Year Published: ";
+                cin >> new_year_published;
+                library.editBook(book_id, new_book_name, new_author, new_isbn, new_category, new_year_published);
+                cout << "Book edited successfully." << endl;
+                break;
+            }
+            case '4': {
+                string book_id;
+                cout << "Enter Book ID to delete: ";
+                cin >> book_id;
+                library.deleteBook(book_id);
+                cout << "Book deleted successfully." << endl;
+                break;
+            }
+            case '5': {
+                string search_query;
+                cin.ignore();
+                cout << "Enter search query: ";
+                getline(cin, search_query);
+                vector<Book> search_results = library.searchBooks(search_query);
+                if (!search_results.empty()) {
+                    cout << "Search Results:" << endl;
+                    for (const Book& book : search_results) {
+                        cout << "Book Name: " << book.book_name << endl;
+                        cout << "Author: " << book.author << endl;
+                        cout << endl;
+                    }
+                } else {
+                    cout << "No matching books found." << endl;
+                }
+                break;
+            }
+            case '6':
+                cout << "Exiting program." << endl;
+                return 0;
+            default:
+                cout << "Invalid choice. Please choose again." << endl;
+        }
     }
 
-  return 0;
+    return 0;
 }
