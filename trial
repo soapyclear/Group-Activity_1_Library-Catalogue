@@ -1,12 +1,60 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
+class Book {
+public:
+    string book_id;
+    string book_name;
+    string author;
+    string isbn;
+    string category;
+    int year_published;
+
+    Book(const string& id, const string& name, const string& auth,
+         const string& isbn_val, const string& cat, int year)
+        : book_id(id), book_name(name), author(auth), isbn(isbn_val),
+          category(cat), year_published(year) {}
+};
+
+class LibraryCatalog {
+private:
+    vector<Book> books;
+
+public:
+    void addBook(const Book& book) {
+        for (const Book& existing_book : books) {
+            if (existing_book.book_name == book.book_name &&
+                existing_book.year_published == book.year_published) {
+                if (existing_book.isbn == book.isbn) {
+                    cout << "Error: Same book already exists in the catalog." << endl;
+                    return;
+                }
+            }
+        }
+        books.push_back(book);
+        sort(books.begin(), books.end(), [](const Book& a, const Book& b) {
+            return a.book_name < b.book_name || (a.book_name == b.book_name && a.year_published < b.year_published);
+        });
+    }
+
+void viewAllBooks() const {
+        cout << "\tID\t\tName\t\tAuthor\t\tISBN\t\tCategory\t\tYear Published" << endl;
+        int id = 1;
+        for (const Book& book : books) {
+            cout << "\t" << id << "\t\t";
+            cout << book.book_name << "\t\t";
+            cout << book.author << "\t\t";
+            cout << book.isbn << "\t\t";
+            cout << book.category << "\t\t";
+            cout << book.year_published << endl;
+            id++;
+        }
+    }
+
+
 int main(){
-string author;
-string category;
-int ISBN;   
-int year;
-char option; 
     
     
     cout << "MENU" << endl;
@@ -19,24 +67,32 @@ char option;
     
     switch (option) {
         case '1': {
-        
-        
-        cout << "Enter book author: ";
-        cin.ignore();
-        getline(cin,author);
+                string book_id, book_name, author, isbn, category;
+                int year_published;
 
-        cout << "Enter ISBN: ";
-        cin >> ISBN;
+                cout << "Enter Book ID: ";
+                cin >> book_id;
+                cin.ignore();
+                cout << "Enter Book Name: ";
+                getline(cin, book_name);
+                cout << "Enter Author: ";
+                getline(cin, author);
+                cout << "Enter ISBN: ";
+                cin >> isbn;
+                cin.ignore();
+                cout << "Enter Category: ";
+                getline(cin, category);
+                cout << "Enter Year Published: ";
+                cin >> year_published;
 
-        cout << "Enter Category: ";
-        cin.ignore();
-        getline(cin,category);
-        
-        cout << "Year Published: ";
-        cin >> year;
-        
-        }
-        
+                Book book(book_id, book_name, author, isbn, category, year_published);
+                library.addBook(book);
+                cout << "Book added successfully." << endl;
+                break;
+            }
+        case '2':
+                library.viewAllBooks();
+                break;
     }
 
   return 0;
