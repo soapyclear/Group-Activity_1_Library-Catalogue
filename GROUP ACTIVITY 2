@@ -2,6 +2,11 @@
 using namespace std;
 
 int main(){
-    
+    cout << "===1st MENU===\t||\t===2nd MENU===\n";
+    cout << "1 Search Loan\t||\t6 Borrow Money\n";
+    cout << "2 View Loan\t\t||\t7 Pay Loan\n";
+    cout << "3 Update Loan\t||\n";
+    cout << "4 Delete Loan\t||\n";
+    cout << "5 Exit\t\t\t||\n";
     return 0;
 }
