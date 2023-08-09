@@ -101,6 +101,34 @@ void editDeductions(Deductions& deductions, const vector<Employee>& employees) {
     }
 }
 
+//function to delete deduction
+void delete_deduction() {
+    int ID_temp;
+    cout << "Enter ID to delete deduction: ";
+    cin >> ID_temp;
+		    
+	int found = -1;
+	for (int i = 0; i < employees.size(); i++) {
+	    if (ID_temp == employees.at(i).id) {
+	        found = i;
+	    }
+	}
+		
+    if (found > -1) {   /// determain if that id excist
+        cout << "Are you sure you want to delete deduction? (Y/N): ";
+        char fd;
+        cin >> fd;
+
+        if (fd == 'Y' || fd == 'y') {
+            cout << "Deleting......." << endl;
+            employees.at(found).totalDeductions = {0}; // Set deductions to zero
+            cout << "Successfully Deleted..." << endl;
+        }
+    } else {
+        cout << "Access denied, invalid ID" << endl;
+    }
+}
+
 int main() {
 
     do {
@@ -146,7 +174,8 @@ int main()
                 break;
             }
             case 4: {
-                
+                delete_deduction();
+		break;
             }
             case 5: {
                computePayroll ();
