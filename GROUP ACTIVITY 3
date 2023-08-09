@@ -40,6 +40,35 @@ void addEmployee() {
     cout << "Employee added successfully!" << endl;
 }
 
+struct Payroll {
+    string period;
+    int hours;
+    int overtime;
+    int dailyRate;
+    
+};
+
+void computePayroll() {
+    Payroll prl;
+    
+    cout << "Input payroll period: ";
+    cin.ignore();
+    getline(cin,prl.period);
+    
+    cout << "Input total hours worked: ";
+    cin >> prl.hours;
+    
+    cout << "Input daily rate: ";
+    cin >> prl.dailyRate;
+    
+    cout << "Input overtime (hours):";
+    cin >> prl.overtime; 
+    
+    cout << "Payroll: (Daily Rate / Hours) + Overtime";
+    cout << "Payroll: " << prl.dailyRate / prl.hours + prl.overtime * 0.3;
+    
+}
+
 // Function to edit deductions
 void editDeductions(Deductions& deductions, const vector<Employee>& employees) {
     int editChoice;
@@ -120,7 +149,8 @@ int main()
                 
             }
             case 5: {
-               
+               computePayroll ();
+                break;
             }
             case 6: {
                
