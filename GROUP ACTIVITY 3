@@ -91,7 +91,26 @@ int main() {
                 break;
             }
             case 2: {
-       			
+       			void employee :: show_emp_details()
+{
+	cout<<"\n\n**** Details of  Employee ****";
+	cout<<"\nEmployee Name      :  "<<emp_name;
+	cout<<"\nEmployee age    :  "<<emp_age;
+	cout<<"\nBasic salary       :  "<<emp_basic;
+	cout<<"\nEmployee ID        :  "<<emp_id;
+	cout<<"\nIncome Tax         :  "<<emp_it;
+	cout<<"\nNet Salary         :  "<<find_net_salary(emp_basic, emp_da, emp_it);
+	cout<<"\n-------------------------------\n\n";
+}
+
+
+int main()
+{
+    employee emp;
+    
+    emp.get_emp_details();
+    emp.show_emp_details();
+
     		}
             case 3: {
                 editDeductions(deductions, employees);
