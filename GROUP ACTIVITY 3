@@ -37,3 +37,79 @@ void addEmployee() {
     cout << "Employee added successfully!" << endl;
 }
 
+// Function to edit deductions
+void editDeductions(Deductions& deductions, const vector<Employee>& employees) {
+    int editChoice;
+    cout << "Edit Deductions:" << endl;
+    cout << "1. Edit deductions individually" << endl;
+    cout << "2. Edit deductions as a group" << endl;
+    cout << "Enter your choice: ";
+    cin >> editChoice;
+
+    if (editChoice == 1) {
+        int empID;
+        cout << "Enter Employee ID: ";
+        cin >> empID;
+
+        double deduction;
+        cout << "Enter Individual Deduction: ";
+        cin >> deduction;
+        deductions.individualDeductions[empID] = deduction;
+    } else if (editChoice == 2) {
+        double deduction;
+        cout << "Enter Common Deduction for All Employees: ";
+        cin >> deduction;
+        // Clear existing individual deductions
+        deductions.individualDeductions.clear();
+        for (size_t i = 0; i < employees.size(); ++i) {
+            deductions.individualDeductions[employees[i].id] = deduction;
+        }
+    } else {
+        cout << "Invalid choice." << endl;
+    }
+}
+
+int main() {
+
+    do {
+        cout << "Main Menu:" << endl;
+        cout << "1. Add employees" << endl;
+        cout << "2. View employees" << endl;
+        cout << "3. Edit deductions" << endl;
+        cout << "4. Delete deductions" << endl;
+        cout << "5. Payroll" << endl;
+        cout << "6. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                addEmployee();
+                break;
+            }
+            case 2: {
+       			
+    		}
+            case 3: {
+                editDeductions(deductions, employees);
+                break;
+            }
+            case 4: {
+                
+            }
+            case 5: {
+               
+            }
+            case 6: {
+               
+            }
+            default: {
+                cout << "\nInvalid choice. Please try again." << endl;
+                break;
+            }
+        }
+
+    } while (choice != 6);
+
+    return 0;
+}
