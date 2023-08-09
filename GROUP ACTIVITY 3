@@ -1,5 +1,7 @@
 #include <iostream>
-
+#include <string>
+#include <vector>
+#include <map>
 using namespace std;
 
 struct Employee {
@@ -13,6 +15,7 @@ struct Employee {
 
 vector<Employee> employees;
 
+//function to add employees
 void addEmployee() {
     Employee emp;
     
