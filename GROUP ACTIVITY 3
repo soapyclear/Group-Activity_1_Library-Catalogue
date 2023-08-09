@@ -10,3 +10,30 @@ struct Employee {
     double dailyRate;
     double totalDeductions;
 };
+
+vector<Employee> employees;
+
+void addEmployee() {
+    Employee emp;
+    
+    cout << "Enter Employee ID: ";
+    cin >> emp.id;
+    
+    cout << "Enter Employee Name: ";
+    cin.ignore();
+    getline(cin, emp.name);
+    
+    cout << "Enter Employee Age: ";
+    cin >> emp.age;
+    
+    cout << "Enter Employee Position: ";
+    cin.ignore();
+    getline(cin, emp.position);
+    
+    cout << "Enter Daily Rate: ";
+    cin >> emp.dailyRate;
+    
+    employees.push_back(emp);
+    cout << "Employee added successfully!" << endl;
+}
+
