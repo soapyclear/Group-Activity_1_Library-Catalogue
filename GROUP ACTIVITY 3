@@ -45,6 +45,7 @@ struct Payroll {
     int hours;
     int overtime;
     int dailyRate;
+int deduction;
     
 };
 
@@ -63,9 +64,12 @@ void computePayroll() {
     
     cout << "Input overtime (hours):";
     cin >> prl.overtime; 
+
+cout << "Input deduction (if any): ";
+cin >> prl.deduction;
     
-    cout << "Payroll: (Daily Rate / Hours) + Overtime";
-    cout << "Payroll: " << prl.dailyRate / prl.hours + prl.overtime * 0.3;
+    cout << "Payroll: [(Total Creditable Hours / 8) * Daily Rate] +{(Total Overtime Hours / 8) * 1.3] - Total Deductions";
+    cout << "Payroll: " << (prl.hours / 8 * prl.dailyRate) + (prl.overtime / 8 * 1.3) - prl.deduction ;
     
 }
 
