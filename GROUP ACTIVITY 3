@@ -1,0 +1,12 @@
+#include <iostream>
+
+using namespace std;
+
+struct Employee {
+    int id;
+    string name;
+    int age;
+    string position;
+    double dailyRate;
+    double totalDeductions;
+};
