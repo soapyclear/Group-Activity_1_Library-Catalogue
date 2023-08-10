@@ -247,11 +247,11 @@ int main() {
         cout << "\n[E] - Add Employee";
         cout << "\n[U] - Edit Employee";
         cout << "\n[R] - View ALL Employees";
+        cout << "\n[D] - Deductions (creates payroll)";
+        cout << "\n[P] - Payroll";
         cout << "\n[T] - Edit Payroll";
         cout << "\n[N] - Edit Deduction";
         cout << "\n[F] - Delete Payroll";
-        cout << "\n[D] - Deductions (creates payroll)";
-        cout << "\n[P] - Payroll";
         cout << "\n[X] - Exit";
         cout << "\nChoose: ";
 
