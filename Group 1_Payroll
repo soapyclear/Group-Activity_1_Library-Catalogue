@@ -250,7 +250,7 @@ int main() {
         cout << "\n[T] - Edit Payroll";
         cout << "\n[N] - Edit Deduction";
         cout << "\n[F] - Delete Payroll";
-        cout << "\n[D] - Deductions";
+        cout << "\n[D] - Deductions (creates payroll)";
         cout << "\n[P] - Payroll";
         cout << "\n[X] - Exit";
         cout << "\nChoose: ";
