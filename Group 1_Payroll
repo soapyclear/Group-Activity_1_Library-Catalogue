@@ -244,13 +244,13 @@ int main() {
 
     while (true) {
         cout << "\nMain Menu:";
-        cout << "\n[E] - Add Employee";
-        cout << "\n[U] - Edit Employee";
-        cout << "\n[R] - View ALL Employees";
+        cout << "\n[P] - Add Employee";
+        cout << "\n[R] - Edit Employee";
+        cout << "\n[O] - View ALL Employees";
         cout << "\n[D] - Deductions (creates payroll)";
-        cout << "\n[P] - Payroll";
-        cout << "\n[T] - Edit Payroll";
-        cout << "\n[N] - Edit Deduction";
+        cout << "\n[I] - Payroll";
+        cout << "\n[G] - Edit Payroll";
+        cout << "\n[Y] - Edit Deduction";
         cout << "\n[F] - Delete Payroll";
         cout << "\n[X] - Exit";
         cout << "\nChoose: ";
