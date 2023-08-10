@@ -1,0 +1,502 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+class Payroll {
+
+public:
+	
+	string month;
+    int year;
+    double totalOvertime;
+    double overtimePay;
+    double creditableHours;
+    double monthlyPay;
+    double deductions, sss, pagibig, loan, tax, cashAdvance, others;
+    double netPay;
+	
+    Payroll(const string& _month, int _year) {
+        month = _month;
+        year = _year;
+    }
+
+    double SolveTotalDeduction() {
+        deductions = sss + pagibig + loan + tax + cashAdvance + others;
+        return deductions;
+    }
+
+    double SolveMonthlyPay(int dailyRate) {
+        monthlyPay = dailyRate * (creditableHours / 8);
+        return monthlyPay;
+    }
+
+    double SolveOvertimePay(int dailyRate) {
+        overtimePay = dailyRate * 0.3 * totalOvertime;
+        return overtimePay;
+    }
+
+    double SolveNetPay(int dailyRate) {
+        netPay = monthlyPay + (dailyRate * 0.3 * totalOvertime) - deductions;
+        return netPay;
+    }
+};
+
+class Employee {
+public:
+    int id;
+    string name;
+    int age;
+    string position;
+    double dailyRate;
+
+    vector<Payroll> payrolls;
+
+    Employee(int _id, string _name, int _age, string _position, double _dailyRate)
+    : id(_id), name(_name), age(_age), position(_position), dailyRate(_dailyRate) {}
+
+
+   Payroll* SearchPayroll(const string& month, int year) {
+    for (size_t i = 0; i < payrolls.size(); ++i) {
+        if (payrolls[i].month == month && payrolls[i].year == year) {
+            // Recalculate deductions before returning the payroll
+            payrolls[i].deductions = payrolls[i].SolveTotalDeduction();
+            return &payrolls[i];
+        }
+    }
+    return NULL;
+    }
+
+
+};
+
+class EmployeeDatabase {
+public:
+    vector<Employee> employees;
+
+    void EditEmployee(int id) {
+        for (size_t i = 0; i < employees.size(); ++i) {
+            if (employees[i].id == id) {
+                cout << "Editing Employee " << employees[i].name << " (ID: " << employees[i].id << ")" << endl;
+
+                // Prompt the user for new information
+                cout << "Enter new Employee Name: ";
+                cin.ignore(); // Clear newline from previous input
+                getline(cin, employees[i].name);
+                cout << "Enter new Age: ";
+                cin >> employees[i].age;
+                cout << "Enter new Position: ";
+                cin.ignore(); // Clear newline from previous input
+                getline(cin, employees[i].position);
+                cout << "Enter new Daily Rate: ";
+                cin >> employees[i].dailyRate;
+
+                cout << "Employee edited successfully." << endl;
+                return;
+            }
+        }
+        cout << "Error: Employee does not exist." << endl;
+    }
+    
+    void EditDeductions(Employee& emp, Payroll& pay) {
+      cout << "\nEditing Deductions for Employee: " << emp.name << " (ID: " << emp.id << ")";
+      cout << "\nFor Month: " << pay.month << ", Year: " << pay.year;
+
+      // Prompt the user for new deduction information
+      cout << "\nEnter new SSS deduction: ";
+      cin >> pay.sss;
+      cout << "Enter new Pagibig deduction: ";
+      cin >> pay.pagibig;
+      cout << "Enter new Loan deduction: ";
+      cin >> pay.loan;
+      cout << "Enter new Tax deduction: ";
+      cin >> pay.tax;
+     cout << "Enter new Cash Advance deduction: ";
+     cin >> pay.cashAdvance;
+     cout << "Enter new Others deduction: ";
+     cin >> pay.others;
+
+     pay.deductions = pay.SolveTotalDeduction();
+     pay.netPay = pay.SolveNetPay(emp.dailyRate);
+
+     cout << "\nDeductions edited successfully." << endl;
+   }
+
+    
+
+    void AddEmployee(const Employee& employee) {
+        for (size_t i = 0; i < employees.size(); ++i) {
+            if (employees[i].id == employee.id && employees[i].name == employee.name) {
+                cout << "Error: Employee already exists." << endl;
+                return;
+            }
+        }
+        employees.push_back(employee);
+    }
+
+    Employee SearchEmployee(int id) {
+        for (size_t i = 0; i < employees.size(); ++i) {
+            if (employees[i].id == id) {
+                return employees[i];
+            }
+        }
+        cout << "Error: Employee does not exist.";
+        // Return a default-constructed Employee if not found
+        return Employee(0, "", 0, "", 0.0);
+    }
+
+    void ViewAllEmployees() {
+        cout << "\tID\t\tName\t\tAge\t\tPosition\t\tDaily Rate" << endl;
+        for (size_t i = 0; i < employees.size(); ++i) {
+            cout << "\n\t" << employees[i].id << "\t\t";
+            cout << employees[i].name << "\t\t";
+            cout << employees[i].age << "\t\t";
+            cout << employees[i].position << "\t\t\t";
+            cout << employees[i].dailyRate << "\t\t";
+        }
+    }
+
+    void DisplayPayroll(const Payroll& payroll) {
+      cout << "\nPayroll Details:";
+      cout << "\nMonth: " << payroll.month << " " << payroll.year;
+      cout << "\nCreditable Hours: " << payroll.creditableHours;
+      cout << "\nTotal Overtime: " << payroll.totalOvertime;
+      cout << "\nMonthly Pay: " << payroll.monthlyPay;
+      cout << "\nOvertime Pay: " << payroll.overtimePay;
+      cout << "\nDeductions:";
+      cout << "\nSSS: " << payroll.sss;
+      cout << "\nPagibig: " << payroll.pagibig;
+      cout << "\nLoan: " << payroll.loan;
+      cout << "\nTax: " << payroll.tax;
+      cout << "\nCash Advance: " << payroll.cashAdvance;
+      cout << "\nOthers: " << payroll.others;
+      cout << "\nTotal Deductions: " << payroll.deductions;
+      cout << "\nNet Pay: " << payroll.netPay;
+      cout << "\n-----------------------------";
+    }
+
+    void EditPayroll(EmployeeDatabase& db, int empId, const string& month, int year, double dailyRate) {
+      Employee& emp = db.FindEmployee(empId);
+
+      // Search payroll according to month and year using a function
+      Payroll& pay = db.FindPayroll(emp, month, year);
+
+      cout << "\nEditing Payroll for Employee: " << emp.name << " (ID: " << emp.id << ")";
+      cout << "\nFor Month: " << month << ", Year: " << year;
+
+      // Prompt the user for new payroll information
+      cout << "\nEnter creditable hours: ";
+      cin >> pay.creditableHours;
+      cout << "Enter total overtime: ";
+      cin >> pay.totalOvertime;
+
+      // Recalculate payroll values using the provided daily rate
+      pay.monthlyPay = pay.SolveMonthlyPay(dailyRate);
+      pay.overtimePay = pay.SolveOvertimePay(dailyRate);
+      pay.deductions = pay.SolveTotalDeduction();
+      pay.netPay = pay.SolveNetPay(dailyRate);
+
+      cout << "\nPayroll edited successfully." << endl;
+    }
+    
+    void DeletePayroll(int empId, const string& month, int year) {
+        Employee& emp = FindEmployee(empId);
+
+        for (vector<Payroll>::iterator it = emp.payrolls.begin(); it != emp.payrolls.end(); ++it) {
+            if (it->month == month && it->year == year) {
+                emp.payrolls.erase(it);
+                cout << "\nPayroll entry for " << month << " " << year << " deleted.";
+                return;
+            }
+        }
+
+        cout << "\nError: Payroll entry for " << month << " " << year << " not found.";
+    }
+    
+
+    Employee& FindEmployee(int id) {
+        for (size_t i = 0; i < employees.size(); ++i) {
+            if (employees[i].id == id) {
+                return employees[i];
+            }
+        }
+        return employees[0]; // Return the first employee (default-constructed)
+    }
+
+    Payroll& FindPayroll(Employee& emp, const string& month, int year) {
+    for (size_t i = 0; i < emp.payrolls.size(); ++i) {
+        if (emp.payrolls[i].month == month && emp.payrolls[i].year == year) {
+            return emp.payrolls[i];
+        }
+    }
+    // If not found, throw an exception or handle the case accordingly
+    throw std::runtime_error("Payroll not found");
+}
+
+
+};
+
+
+int main() {
+    EmployeeDatabase employeeDatabase;
+
+    while (true) {
+        cout << "\nMain Menu:";
+        cout << "\n[E] - Add Employee";
+        cout << "\n[U] - Edit Employee";
+        cout << "\n[R] - View ALL Employees";
+        cout << "\n[T] - Edit Payroll";
+        cout << "\n[N] - Edit Deduction";
+        cout << "\n[F] - Delete Payroll";
+        cout << "\n[D] - Deductions";
+        cout << "\n[P] - Payroll";
+        cout << "\n[X] - Exit";
+        cout << "\nChoose: ";
+
+        char choice;
+        int id, age, year;
+        string month;
+        string position, name;
+        double dailyRate;
+        double deductions, sss, pagibig, loan, tax, cashAdvance, others;
+        cin >> choice;
+        switch (choice) {
+        case 'E':
+        case 'e': {
+            cout << "\nAdd Employee";
+            cout << "\nEmployee ID: ";
+            cin >> id;
+            cin.ignore();
+            cout << "Employee Name: ";
+            getline(cin, name);
+            cout << "Age: ";
+            cin >> age;
+            cin.ignore(); // Clear newline from previous input
+            cout << "Position: ";
+            getline(cin, position);
+            cout << "Daily Rate: ";
+            cin >> dailyRate;
+
+            Employee emp(id, name, age, position, dailyRate);
+
+            employeeDatabase.AddEmployee(emp);
+            employeeDatabase.ViewAllEmployees();
+            break;
+        }
+        
+        case 'F':
+        case 'f': { // Delete Payroll
+                cout << "Delete Payroll\n";
+                employeeDatabase.ViewAllEmployees();
+                cout << "\nEnter Employee Id: ";
+                cin >> id;
+                cin.ignore(); // Clear newline from previous input
+                cout << "Enter month: ";
+                getline(cin, month);
+                cout << "Enter year: ";
+                cin >> year;
+                employeeDatabase.DeletePayroll(id, month, year);
+                break;
+            }
+        
+        case 'R':
+        case 'r': {
+            employeeDatabase.ViewAllEmployees();
+            break;
+        }
+        
+        case 'N':
+        case 'n':{
+			// Ask for id, month, and year to find the employee and payroll entry
+            cout << "\nEnter Employee Id: ";
+            cin >> id;
+            cin.ignore();
+            cout << "Enter month: ";
+            getline(cin, month);
+            cout << "Enter year: ";
+            cin >> year;
+
+            // Find the Employee using the Id
+            Employee emp = employeeDatabase.SearchEmployee(id);
+            if (emp.id == 0) {
+              cout << "\nError: Employee does not exist.";
+              // You might want to return to the main menu or take appropriate action here
+            } else {
+               // Search for the payroll entry for the given month and year
+               Payroll* pay = emp.SearchPayroll(month, year);
+
+               if (pay != NULL) {
+               // If the payroll entry is found, call EditDeductions to edit the deductions
+               employeeDatabase.EditDeductions(emp, *pay);
+               } else {
+                  // If the payroll entry is not found, display an error message
+                  cout << "\nError: Payroll entry for " << month << " " << year << " not found." << endl;
+                }
+            }
+            break;
+        }
+
+        case 'T':
+        case 't': { // Edit Payroll
+            cout << "\nEdit Payroll";
+    		cout << "\nEnter Employee Id: ";
+    		cin >> id;
+
+    		// Clear newline from previous input
+    		cin.ignore();
+
+    		// Find the Employee using the Id
+    		Employee emp = employeeDatabase.SearchEmployee(id);
+    		if (emp.id == 0) {
+        		cout << "\nError: Employee does not exist.";
+        		break;
+    		}
+
+    		cout << "\nEnter month: ";
+    		getline(cin, month);
+    		cout << "\nEnter year: ";
+    		cin >> year;
+
+    		// Prompt the user for the daily rate
+    		cout << "\nEnter Daily Rate: ";
+    		cin >> dailyRate;
+
+    		employeeDatabase.EditPayroll(employeeDatabase, id, month, year, dailyRate); // Call the function to edit payroll
+    		break;
+        }
+
+        case 'D':
+        case 'd': {
+            cout << "\nSet Deductions";
+    		cout << "\nEnter Employee Id: ";
+    		cin >> id;
+
+    		// Find the Employee using the Id
+    		Employee& emp = employeeDatabase.FindEmployee(id);
+    		if (emp.id == 0) {
+        		cout << "\nError: Employee does not exist.";
+        		break;
+    		}
+
+    		cout << "\nEnter month: ";
+    		cin >> month;
+    		cout << "\nEnter year: ";
+    		cin >> year;
+
+    		// Check if a payroll entry for the given month and year already exists
+    		bool payrollExists = false;
+            for (size_t i = 0; i < emp.payrolls.size(); ++i) {
+              if (emp.payrolls[i].month == month && emp.payrolls[i].year == year) {
+               payrollExists = true;
+               break;
+               }
+            }
+
+    		if (payrollExists) {
+        		cout << "\nError: Payroll entry for " << month << " " << year << " already exists.";
+        		break;
+    		}
+
+    		// Create a new payroll for the employee
+    		Payroll payroll(month, year);
+
+    		// Ask for the actual deductions
+    		cout << "\nSSS: ";
+    		cin >> payroll.sss;
+    		cout << "Pagibig: ";
+    		cin >> payroll.pagibig;
+    		cout << "Loan: ";
+    		cin >> payroll.loan;
+    		cout << "Tax: ";
+    		cin >> payroll.tax;
+    		cout << "CashAdvance: ";
+    		cin >> payroll.cashAdvance;
+    		cout << "Others: ";
+    		cin >> payroll.others;
+
+    		emp.payrolls.push_back(payroll);
+
+    		cout << "\nTotal Deductions: " << payroll.SolveTotalDeduction();
+    		break;
+        }
+        case 'P':
+        case 'p': {
+           cout << "\nShow Payroll";
+           // Ask for id, month, and year to find the payroll object
+           cout << "\nEnter Employee Id: ";
+           cin >> id;
+
+            // Clear newline from previous input
+            cin.ignore();
+
+            // Find the Employee using the Id
+            Employee emp = employeeDatabase.SearchEmployee(id);
+            if (emp.id == 0) {
+              cout << "\nError: Employee does not exist.";
+              break;
+            }
+
+            cout << "\nEnter month: ";
+            getline(cin, month); // Read the month with spaces
+            cout << "\nEnter year: ";
+            cin >> year;
+
+            // Prompt the user for the daily rate
+            cout << "\nEnter Daily Rate: ";
+            cin >> dailyRate;
+
+            // Search payroll according to month and year using a function
+            Payroll* pay = NULL;
+            for (size_t i = 0; i < emp.payrolls.size(); ++i) {
+               if (emp.payrolls[i].month == month && emp.payrolls[i].year == year) {
+                 pay = &emp.payrolls[i];
+                 break;
+                }
+            }
+
+            if (pay != NULL) {
+            cout << "\nCreditable hours: ";
+            cin >> pay->creditableHours;
+            cout << "\nTotal overtime: ";
+            cin >> pay->totalOvertime;
+
+            pay->monthlyPay = pay->SolveMonthlyPay(dailyRate);
+            pay->overtimePay = pay->SolveOvertimePay(dailyRate);
+            pay->deductions = pay->SolveTotalDeduction(); // Update deductions here
+            pay->netPay = pay->SolveNetPay(dailyRate);
+
+            cout << "\nMonthly pay: " << pay->monthlyPay;
+            cout << "\nOvertime pay: " << pay->overtimePay;
+            cout << "\nTotal Deductions: " << pay->deductions; // Display updated deductions
+            cout << "\nNet pay: " << pay->netPay;
+           } else {
+           cout << "\nError: Payroll entry for " << month << " " << year << " not found." << endl;
+           }
+          break;
+         }
+
+
+        case 'U':
+        case 'u': { // Edit Employee
+            cout << "Edit Employee\n";
+            employeeDatabase.ViewAllEmployees();
+            cout << "\nEnter Employee Id: ";
+            cin >> id;
+            employeeDatabase.EditEmployee(id);
+            break;
+        }
+        case 'X':
+        case 'x': {
+            cout << "\nExiting program...";
+            return 0;
+        }
+        default:
+            cout << "\nInvalid input. Please try again.";
+            break;
+        }
+    }
+    cout << "\nExiting program...";
+    return 0;
+}
